@@ -77,5 +77,33 @@ void P2()
     Console.ReadLine();
 }
 
+#pragma warning disable 8321
+void P2_Brute()
+{
+    int val = 50;
+    int result = 0;
+    foreach (var line in inputList)
+    {
+        int dir = line[0] == 'R' ? 1 : -1;
+        int absDelta = int.Parse(line[1..]);
+
+        while (absDelta > 0)
+        {
+            absDelta--;
+            val += dir;
+            if (val == 100)
+                val = 0;
+            else if (val == -1)
+                val = 99;
+            if (val == 0)
+                result++;
+        }
+    }
+
+    Console.WriteLine(result);
+    Console.ReadLine();
+}
+#pragma warning restore 8321
+
 P1();
 P2();
