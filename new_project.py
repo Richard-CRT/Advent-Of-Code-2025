@@ -4,22 +4,29 @@ import shutil
 import re
 import uuid
 import json
-import browser_cookie3
 import html
 
 year = 2025
 sln_file = f"Advent_of_Code_{year}.sln"
 template_project = "TemplateProject"
+aoc_session_cookie_filename = "aoc_session_cookie.conf"
 
 def download_input(url, dst_input):    
     input_url = f"{url}/input"
     print(f"Downloading contents for `{dst_input}` from `{input_url}`")
+    headers = {
+        "User-Agent": "github.com/Richard-CRT - Only serves to download input (once) to local machine",
+    }
+    
     try:
-        headers = {
-            "User-Agent": "github.com/Richard-CRT - Only serves to download input (once) to local machine",
-        }
-        cj = browser_cookie3.firefox(domain_name='adventofcode.com')
-        resp = requests.get(input_url, headers=headers, cookies=cj)
+        with open(aoc_session_cookie_filename, 'r') as f:
+            aoc_session_cookie = f.read().strip()
+    except Exception as err:
+        print(f"Error reading session cookie from `{aoc_session_cookie_filename}`, contents not written to `{dst_input}`")
+        raise
+    
+    try:
+        resp = requests.get(input_url, headers=headers, cookies={"session": aoc_session_cookie})
     except Exception as err:
         print(f"Error downloading input from `{input_url}`, contents not written to `{dst_input}`")
         raise

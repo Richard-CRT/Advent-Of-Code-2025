@@ -1,5 +1,6 @@
 input.txt
 !/TemplateProject/input.txt
+aoc_session_cookie.conf
 
 # Python Virtual Environment
 .venv/
