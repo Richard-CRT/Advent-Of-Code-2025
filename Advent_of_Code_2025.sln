@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoCUtilities", "AoCUtilitie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_01_Secret_Entrance", "Day_01_Secret_Entrance\Day_01_Secret_Entrance.csproj", "{6A86BF91-FDC9-4AC1-BFA5-219E806B89EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_02_Gift_Shop", "Day_02_Gift_Shop\Day_02_Gift_Shop.csproj", "{D69203A6-291A-4514-8BB6-FBF1490F49CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6A86BF91-FDC9-4AC1-BFA5-219E806B89EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A86BF91-FDC9-4AC1-BFA5-219E806B89EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A86BF91-FDC9-4AC1-BFA5-219E806B89EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D69203A6-291A-4514-8BB6-FBF1490F49CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D69203A6-291A-4514-8BB6-FBF1490F49CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D69203A6-291A-4514-8BB6-FBF1490F49CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D69203A6-291A-4514-8BB6-FBF1490F49CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
