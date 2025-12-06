@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_03_Lobby", "Day_03_Lobb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_04_Printing_Department", "Day_04_Printing_Department\Day_04_Printing_Department.csproj", "{6BC37114-5B31-4CE2-ACF0-0B11F9E1F628}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_05_Cafeteria", "Day_05_Cafeteria\Day_05_Cafeteria.csproj", "{E4F7F63F-A739-49F5-A823-6DD3EEC89275}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{6BC37114-5B31-4CE2-ACF0-0B11F9E1F628}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BC37114-5B31-4CE2-ACF0-0B11F9E1F628}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BC37114-5B31-4CE2-ACF0-0B11F9E1F628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4F7F63F-A739-49F5-A823-6DD3EEC89275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4F7F63F-A739-49F5-A823-6DD3EEC89275}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4F7F63F-A739-49F5-A823-6DD3EEC89275}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4F7F63F-A739-49F5-A823-6DD3EEC89275}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
