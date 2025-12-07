@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_05_Cafeteria", "Day_05_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_06_Trash_Compactor", "Day_06_Trash_Compactor\Day_06_Trash_Compactor.csproj", "{FACDC327-3CD5-47BA-A4FF-CBC68EDDC6B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Day_07_Laboratories", "Day_07_Laboratories\Day_07_Laboratories.csproj", "{2A095D48-FB48-4337-945F-7FF8CAE51946}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{FACDC327-3CD5-47BA-A4FF-CBC68EDDC6B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FACDC327-3CD5-47BA-A4FF-CBC68EDDC6B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FACDC327-3CD5-47BA-A4FF-CBC68EDDC6B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A095D48-FB48-4337-945F-7FF8CAE51946}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A095D48-FB48-4337-945F-7FF8CAE51946}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A095D48-FB48-4337-945F-7FF8CAE51946}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A095D48-FB48-4337-945F-7FF8CAE51946}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
