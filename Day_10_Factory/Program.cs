@@ -265,44 +265,249 @@ void P2()
     //    result += minButtonPushes;
 
     //    i++;
+    //} 
+
+    #region Z3
+    //foreach (Machine machine in machines)
+    //{
+    //    using (var z3Context = new Microsoft.Z3.Context())
+    //    {
+    //        var z3AllVariables = machine.Buttons.Select(b => z3Context.MkIntConst(string.Join(',', b))).ToList();
+    //        var z3Optimiser = z3Context.MkOptimize();
+
+    //        // Direct Z3 that it needs to minimise the variables (button presses)
+    //        z3Optimiser.MkMinimize(z3Context.MkAdd(z3AllVariables));
+    //        // Constrain all the variables (button presses) to >= 0
+    //        z3AllVariables.ForEach(z3Var => z3Optimiser.Add(z3Context.MkGe(z3Var, z3Context.MkInt(0))));
+
+    //        for (int joltageIndex = 0; joltageIndex < machine.TargetJoltages.Length; joltageIndex++)
+    //        {
+    //            List<IntExpr> z3Variables = new();
+    //            for (int buttonIndex = 0; buttonIndex < machine.Buttons.Count; buttonIndex++)
+    //            {
+    //                if (machine.Buttons[buttonIndex].Contains(joltageIndex))
+    //                {
+    //                    z3Variables.Add(z3AllVariables[buttonIndex]);
+    //                }
+    //            }
+    //            // Constrain that the sum of the relevant variables must be the target joltage
+    //            ArithExpr z3SumExpr = z3Context.MkAdd(z3Variables);
+    //            Expr z3SumTarget = z3Context.MkInt(machine.TargetJoltages[joltageIndex]);
+    //            z3Optimiser.Add(z3Context.MkEq(z3SumExpr, z3SumTarget));
+    //        }
+
+    //        z3Optimiser.Check();
+    //        // Extract the values from the check call
+    //        result += z3AllVariables.Sum(z3Var => ((IntNum)z3Optimiser.Model.Eval(z3Var)).Int);
+    //    }
     //}
+    #endregion
 
-    foreach (Machine machine in machines)
+    void printMatrix(int[,] A, int[] b)
     {
-        using (var z3Context = new Microsoft.Z3.Context())
+        int rows = A.GetLength(0);
+        int columns = A.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
         {
-            var z3AllVariables = machine.Buttons.Select(b => z3Context.MkIntConst(string.Join(',', b))).ToList();
-            var z3Optimiser = z3Context.MkOptimize();
-
-            // Direct Z3 that it needs to minimise the variables (button presses)
-            z3Optimiser.MkMinimize(z3Context.MkAdd(z3AllVariables));
-            // Constrain all the variables (button presses) to >= 0
-            z3AllVariables.ForEach(z3Var => z3Optimiser.Add(z3Context.MkGe(z3Var, z3Context.MkInt(0))));
-
-            for (int joltageIndex = 0; joltageIndex < machine.TargetJoltages.Length; joltageIndex++)
+            for (int j = 0; j < columns; j++)
             {
-                List<IntExpr> z3Variables = new();
-                for (int buttonIndex = 0; buttonIndex < machine.Buttons.Count; buttonIndex++)
-                {
-                    if (machine.Buttons[buttonIndex].Contains(joltageIndex))
-                    {
-                        z3Variables.Add(z3AllVariables[buttonIndex]);
-                    }
-                }
-                // Constrain that the sum of the relevant variables must be the target joltage
-                ArithExpr z3SumExpr = z3Context.MkAdd(z3Variables);
-                Expr z3SumTarget = z3Context.MkInt(machine.TargetJoltages[joltageIndex]);
-                z3Optimiser.Add(z3Context.MkEq(z3SumExpr, z3SumTarget));
+                Console.Write($"{A[i, j],2} ");
             }
+            Console.Write($"   {b[i],2}");
+            Console.WriteLine();
+        }
+        Console.WriteLine();
+    }
+    //void printMatrix(int[,] A)
+    //{
+    //    int rows = A.GetLength(0);
+    //    int columns = A.GetLength(1);
 
-            z3Optimiser.Check();
-            // Extract the values from the check call
-            result += z3AllVariables.Sum(z3Var => ((IntNum)z3Optimiser.Model.Eval(z3Var)).Int);
+    //    for (int i = 0; i < rows; i++)
+    //    {
+    //        for (int j = 0; j < columns; j++)
+    //        {
+    //            Console.Write($"{A[i, j]} ");
+    //        }
+    //        Console.WriteLine();
+    //    }
+    //    Console.WriteLine();
+    //}
+    void printVector(int[] b)
+    {
+        int rows = b.GetLength(0);
+
+        for (int i = 0; i < rows; i++)
+        {
+            Console.WriteLine($"{b[i]} ");
+        }
+        Console.WriteLine();
+    }
+
+    void swapRow(int[,] A, int[] b, int i, int j)
+    {
+        if (i != j)
+        {
+            int columns = A.GetLength(1);
+            for (int col = 0; col < columns; col++)
+            {
+                (A[i, col], A[j, col]) = (A[j, col], A[i, col]);
+            }
+            (b[i], b[j]) = (b[j], b[i]);
+        }
+    }
+    void swapColumn(int[,] A, int[] c, int i, int j)
+    {
+        if (i != j)
+        {
+            int rows = A.GetLength(0);
+            for (int row = 0; row < rows; row++)
+            {
+                (A[row, i], A[row, j]) = (A[row, j], A[row, i]);
+            }
+            (c[i], c[j]) = (c[j], c[i]);
+        }
+    }
+    void reduceRow(int[,] A, int[] b, int j, int i)
+    {
+        // Subtract multiples from rows to end up with everything to the left of the diagonal = 0
+        if (A[i, i] != 0)
+        {
+            int columns = A.GetLength(1);
+
+            int x = A[i, i];
+            int y = -A[j, i];
+            int d = (int)AoC.GCF(x, y);
+            for (int n = 0; n < columns; n++)
+                A[j, n] = ((y * A[i, n]) + (x * A[j, n])) / d; // Integer division
+            b[j] = ((y * b[i]) + (x * b[j])) / d; // Integer division
         }
     }
 
-    Console.WriteLine(result);
-    Console.ReadLine();
+    (int[,] A, int[] b, int[] c) reduce(int[,] A, int[] b, int[] c)
+    {
+        //printMatrix(A, b);
+        //printVector(c);
+
+        int Arows = A.GetLength(0);
+        int Acolumns = A.GetLength(1);
+        //Console.WriteLine("===");
+        //printMatrix(A, b);
+        for (int col = 0; col < Acolumns; col++)
+        {
+            //Console.WriteLine("---");
+            //Console.WriteLine(col);
+            //printMatrix(A, b);
+
+            // Swap columns around until there's definitely a non-0 in column col
+            //Console.WriteLine($"Swapping columns to ensure there is a non-0 value in column {col}");
+            int k = col + 1;
+            List<int> rowsWithNon0 = Enumerable.Range(col, Arows - col).Where(i => A[i, col] != 0).ToList();
+            while (rowsWithNon0.Count == 0 && k < Acolumns)
+            {
+                //Console.WriteLine($"Swap... {col} {k}");
+                swapColumn(A, c, col, k);
+                k++;
+                rowsWithNon0 = Enumerable.Range(col, Arows - col).Where(i => A[i, col] != 0).ToList();
+            }
+
+            //printMatrix(A, b);
+
+            // If there's no column with non-0 values, we're done
+            if (rowsWithNon0.Count == 0)
+            {
+                //Console.WriteLine("No suitable column with non-0 values");
+                break;
+            }
+
+            //printMatrix(A, b);
+
+            // Swap rows so A[col][col] is non-0
+            //Console.WriteLine($"Swap rows to put non-0 in A[{col}][{col}]");
+            if (col != rowsWithNon0[0])
+            {
+                //Console.WriteLine($"Swap... {col} {rowsWithNon0[0]}");
+                swapRow(A, b, col, rowsWithNon0[0]);
+            }
+
+            Debug.Assert(A[col, col] != 0);
+
+            //printMatrix(A, b);
+
+            // Reduce other rows
+            for (int row = col + 1; row < Arows; row++)
+                reduceRow(A, b, row, col);
+
+            //printMatrix(A, b);
+            //printVector(b);
+            //printVector(c);
+        }
+
+        //Console.WriteLine("===");
+
+        //printMatrix(A, b);
+
+        List<int> rowsWithNotAll0 = Enumerable.Range(0, Arows).Where(row => Enumerable.Range(0, Acolumns).Select(column => A[row, column]).Any(e => e != 0)).ToList();
+
+        // Remove the empty rows
+        int[,] newA = new int[rowsWithNotAll0.Count, Acolumns];
+        for (int row = 0; row < rowsWithNotAll0.Count; row++)
+            for (int col = 0; col < Acolumns; col++)
+                newA[row, col] = A[rowsWithNotAll0[row], col];
+        A = newA;
+        Arows = A.GetLength(0);
+        b = rowsWithNotAll0.Select(row => b[row]).ToArray();
+
+        //Console.WriteLine("Back substitution");
+        // Back substitution
+        for (int row = Arows - 1; row >= 0; row--)
+        {
+            for (int col = 0; col < row; col++)
+            {
+                reduceRow(A, b, col, row);
+            }
+        }
+
+        printMatrix(A, b);
+        printVector(c);
+
+        return (A, b, c);
+    }
+
+    // Ax = b
+    // A is the coefficient matrix for the linear equations
+    // x is the input vector i.e. button pushes
+    // b is the target joltages
+    foreach (Machine machine in machines)
+{
+    int[,] A = new int[machine.TargetLights.Length, machine.Buttons.Count];
+    int[] b = machine.TargetJoltages;
+    int[] c = machine.Buttons.Select(button => button.Select(j => b[j]).Min()).ToArray();
+    for (int buttonIndex = 0; buttonIndex < machine.Buttons.Count; buttonIndex++)
+    {
+        var button = machine.Buttons[buttonIndex];
+        for (int joltageIndex = 0; joltageIndex < machine.TargetJoltages.Length; joltageIndex++)
+        {
+            if (button.Contains(joltageIndex))
+            {
+                A[joltageIndex, buttonIndex] = 1;
+            }
+        }
+    }
+    //printMatrix(A);
+    //printVector(b);
+    //printVector(c);
+
+    (A, b, c) = reduce(A, b, c);
+
+    //printMatrix(A);
+    //printVector(b);
+    //printVector(c);
+}
+
+Console.WriteLine(result);
+Console.ReadLine();
 }
 
 P1();
