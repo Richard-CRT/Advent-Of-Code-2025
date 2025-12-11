@@ -33,6 +33,8 @@ namespace AdventOfCodeUtilities
     {
         public static Int64 GCF(Int64 a, Int64 b)
         {
+            a = Math.Abs(a);
+            b = Math.Abs(b);
             while (b != 0)
             {
                 Int64 temp = b;
@@ -44,6 +46,8 @@ namespace AdventOfCodeUtilities
 
         public static Int64 LCM(Int64 a, Int64 b)
         {
+            a = Math.Abs(a);
+            b = Math.Abs(b);
             return (a / GCF(a, b)) * b;
         }
 
