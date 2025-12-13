@@ -7,15 +7,14 @@ using System.Runtime.ExceptionServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.Z3;
 
 List<string> inputList = AoC.GetInputLines();
 List<Machine> machines = inputList.Select(l => new Machine(l)).ToList();
 
-// Path finding!
-
 void P1()
 {
+    // Path finding!
+
     Int64 result = 0;
 
     foreach (var machine in machines)
@@ -56,294 +55,32 @@ void P1()
 
 void P2()
 {
-    Int64 result = 0;
-
-    ////This solution works but takes too long on the hardest input lines
-    //bool check(List<(List<int> ButtonIndexes, int TargetSum)> simultaneousEquations, int[] buttonPushesByButtonIndex)
-    //{
-    //    // Check simulateneous equations of input
-    //    bool allSimultaneousEquationsPassed = true;
-    //    foreach (var equation in simultaneousEquations)
-    //    {
-    //        bool allButtonPushValuesKnown = true;
-    //        int sum = 0;
-    //        foreach (var buttonInEquationIndex in equation.ButtonIndexes)
-    //        {
-    //            if (buttonPushesByButtonIndex[buttonInEquationIndex] != -1)
-    //                sum += buttonPushesByButtonIndex[buttonInEquationIndex];
-    //            else
-    //            {
-    //                allButtonPushValuesKnown = false;
-    //                break;
-    //            }
-    //        }
-    //        if (allButtonPushValuesKnown)
-    //        {
-    //            if (sum == equation.TargetSum)
-    //            {
-    //                // This equation is fulfilled
-    //            }
-    //            else
-    //            {
-    //                // Fails equation - no way to recover
-    //                allSimultaneousEquationsPassed = false;
-    //                return false;
-    //            }
-    //        }
-    //        else
-    //        {
-    //            // Can't check this equation as we haven't picked a value for this button
-    //            //allSimultaneousEquationsPassed = false;
-    //        }
-    //    }
-
-    //    return allSimultaneousEquationsPassed;
-    //}
-
-    //bool extrapolateFromSimultaneousEquations(List<(List<int> ButtonIndexes, int TargetSum)> simultaneousEquations, int[] newButtonPushesByButtonIndex)
-    //{
-    //    bool valueCalculated = true;
-    //    bool calculatedValueInvalid = false;
-    //    while (valueCalculated)
-    //    {
-    //        valueCalculated = false;
-    //        foreach (var equation in simultaneousEquations)
-    //        {
-    //            int sum = equation.TargetSum;
-    //            List<int> unknownButtonIndexes = new();
-    //            foreach (var buttonInEquationIndex in equation.ButtonIndexes)
-    //            {
-    //                int currentPushesValue = newButtonPushesByButtonIndex[buttonInEquationIndex];
-    //                if (currentPushesValue == -1)
-    //                    unknownButtonIndexes.Add(buttonInEquationIndex);
-    //                else
-    //                {
-    //                    sum -= currentPushesValue;
-    //                }
-    //            }
-    //            if (unknownButtonIndexes.Count == 1)
-    //            {
-    //                // We can calculate the last value
-    //                valueCalculated = true;
-    //                if (sum < 0)
-    //                    calculatedValueInvalid = true;
-    //                else
-    //                    newButtonPushesByButtonIndex[unknownButtonIndexes[0]] = sum;
-    //                break;
-    //            }
-    //        }
-    //        if (calculatedValueInvalid)
-    //            break;
-    //    }
-    //    return !calculatedValueInvalid;
-    //}
-
-    //int recurse(Machine machine, List<(List<int> ButtonIndexes, int TargetSum)> simultaneousEquations, int[] buttonPushesByButtonIndex, int[] joltages, int buttonIndex)
-    //{
-    //    Debug.Assert(buttonPushesByButtonIndex.Count(bp => bp == -1) != 1);
-
-    //    //// Check simulateneous equations of input
-    //    //bool allSimultaneousEquationsPassed = true;
-    //    //foreach (var equation in simultaneousEquations)
-    //    //{
-    //    //    bool allButtonPushValuesKnown = true;
-    //    //    int sum = 0;
-    //    //    foreach (var buttonInEquationIndex in equation.ButtonIndexes)
-    //    //    {
-    //    //        if (buttonPushesByButtonIndex[buttonInEquationIndex] != -1)
-    //    //            sum += buttonPushesByButtonIndex[buttonInEquationIndex];
-    //    //        else
-    //    //        {
-    //    //            allButtonPushValuesKnown = false;
-    //    //            break;
-    //    //        }
-    //    //    }
-    //    //    if (allButtonPushValuesKnown)
-    //    //    {
-    //    //        if (sum == equation.TargetSum)
-    //    //        {
-    //    //            // This equation is fulfilled
-    //    //        }
-    //    //        else
-    //    //        {
-    //    //            // Fails equation - no way to recover
-    //    //            allSimultaneousEquationsPassed = false;
-    //    //            return false;
-    //    //        }
-    //    //    }
-    //    //    else
-    //    //    {
-    //    //        // Can't check this equation as we haven't picked a value for this button
-    //    //        allSimultaneousEquationsPassed = false;
-    //    //    }
-    //    //}
-
-    //    //if (allSimultaneousEquationsPassed)
-    //    //    return buttonPushesByButtonIndex.Sum();
-
-    //    // Check joltages equal maybe? Possibly more efficient than simultaneous equations
-    //    if (buttonIndex == machine.Buttons.Count)
-    //    {
-    //        //Console.WriteLine(string.Join(',', buttonPushesByButtonIndex));
-    //        if (joltages.SequenceEqual(machine.TargetJoltages))
-    //        {
-    //            Debug.Assert(buttonPushesByButtonIndex.All(bp => bp >= 0));
-    //            return buttonPushesByButtonIndex.Sum();
-    //        }
-    //        else
-    //        {
-    //            return int.MaxValue;
-    //        }
-    //    }
-
-    //    // At this point we satisfy the known simultaneous equations but not all of them
-    //    var button = machine.Buttons[buttonIndex];
-
-    //    int maxPushes = int.MaxValue;
-    //    foreach (int index in button)
-    //        maxPushes = Math.Min(maxPushes, machine.TargetJoltages[index] - joltages[index]);
-
-    //    int minButtonPushes = int.MaxValue;
-    //    for (int pushes = 0; pushes <= maxPushes; pushes++)
-    //    {
-    //        var newButtonPushesByButtonIndex = buttonPushesByButtonIndex.ToArray();
-    //        newButtonPushesByButtonIndex[buttonIndex] = pushes;
-
-    //        // Do simultaneous equations where possible
-    //        bool valid = extrapolateFromSimultaneousEquations(simultaneousEquations, newButtonPushesByButtonIndex);
-    //        if (!valid) continue;
-
-    //        if (check(simultaneousEquations, newButtonPushesByButtonIndex))
-    //        {
-    //            int[] newJoltages = new int[machine.TargetJoltages.Length];
-    //            for (int i = 0; i < newButtonPushesByButtonIndex.Length; i++)
-    //            {
-    //                if (newButtonPushesByButtonIndex[i] != -1)
-    //                {
-    //                    foreach (int joltageIndex in machine.Buttons[i])
-    //                        newJoltages[joltageIndex] += newButtonPushesByButtonIndex[i];
-    //                }
-    //            }
-
-    //            // Find the first unknown buttonIndex
-    //            int nextButtonIndex;
-    //            for (nextButtonIndex = 0; nextButtonIndex < machine.Buttons.Count && newButtonPushesByButtonIndex[nextButtonIndex] != -1; nextButtonIndex++) { }
-    //            minButtonPushes = Math.Min(minButtonPushes, recurse(machine, simultaneousEquations, newButtonPushesByButtonIndex, newJoltages, nextButtonIndex));
-    //        }
-    //    }
-    //    return minButtonPushes;
-    //}
-
-    //int i = 0;
-
-    //foreach (var machine in machines)
-    //{
-    //    Console.WriteLine($"{machine.Buttons.Count} buttons {machine.TargetJoltages.Length} target joltages");
-
-    //    // Construct simultaneous equations
-    //    List<(List<int>, int)> simultaneousEquations = new();
-    //    for (int joltageIndex = 0; joltageIndex < machine.TargetJoltages.Length; joltageIndex++)
-    //    {
-    //        // The target sum is machine.TargetJoltages[joltageIndex]
-    //        // Need to figure out which buttons contribute to this sum
-    //        List<int> buttonIndexesInEquation = new();
-    //        for (int buttonIndex = 0; buttonIndex < machine.Buttons.Count; buttonIndex++)
-    //        {
-    //            var button = machine.Buttons[buttonIndex];
-    //            if (button.Contains(joltageIndex))
-    //            {
-    //                // Contributes to the simultaneous equation
-    //                buttonIndexesInEquation.Add(buttonIndex);
-    //            }
-    //        }
-    //        simultaneousEquations.Add((buttonIndexesInEquation, machine.TargetJoltages[joltageIndex]));
-    //    }
-
-    //    int minButtonPushes = recurse(machine, simultaneousEquations, Enumerable.Repeat(-1, machine.Buttons.Count).ToArray(), new int[machine.TargetJoltages.Length], 0);
-    //    Console.WriteLine($"{i}/{machines.Count} {minButtonPushes}");
-    //    //Console.ReadLine();
-    //    result += minButtonPushes;
-
-    //    i++;
-    //} 
-
-    #region Z3
-    //foreach (Machine machine in machines)
-    //{
-    //    using (var z3Context = new Microsoft.Z3.Context())
-    //    {
-    //        var z3AllVariables = machine.Buttons.Select(b => z3Context.MkIntConst(string.Join(',', b))).ToList();
-    //        var z3Optimiser = z3Context.MkOptimize();
-
-    //        // Direct Z3 that it needs to minimise the variables (button presses)
-    //        z3Optimiser.MkMinimize(z3Context.MkAdd(z3AllVariables));
-    //        // Constrain all the variables (button presses) to >= 0
-    //        z3AllVariables.ForEach(z3Var => z3Optimiser.Add(z3Context.MkGe(z3Var, z3Context.MkInt(0))));
-
-    //        for (int joltageIndex = 0; joltageIndex < machine.TargetJoltages.Length; joltageIndex++)
-    //        {
-    //            List<IntExpr> z3Variables = new();
-    //            for (int buttonIndex = 0; buttonIndex < machine.Buttons.Count; buttonIndex++)
-    //            {
-    //                if (machine.Buttons[buttonIndex].Contains(joltageIndex))
-    //                {
-    //                    z3Variables.Add(z3AllVariables[buttonIndex]);
-    //                }
-    //            }
-    //            // Constrain that the sum of the relevant variables must be the target joltage
-    //            ArithExpr z3SumExpr = z3Context.MkAdd(z3Variables);
-    //            Expr z3SumTarget = z3Context.MkInt(machine.TargetJoltages[joltageIndex]);
-    //            z3Optimiser.Add(z3Context.MkEq(z3SumExpr, z3SumTarget));
-    //        }
-
-    //        z3Optimiser.Check();
-    //        // Extract the values from the check call
-    //        result += z3AllVariables.Sum(z3Var => ((IntNum)z3Optimiser.Model.Eval(z3Var)).Int);
-    //    }
-    //}
-    #endregion
-
-    void printMatrix(int[,] A, int[] b)
+#pragma warning disable 8321
+    void printMatrix(int[,] A, int[] b, int[] c)
     {
         int rows = A.GetLength(0);
         int columns = A.GetLength(1);
 
+        int maxNumDigits = Enumerable.Range(0, rows).Select(i => Enumerable.Range(0, columns).Select(j => A[i, j].ToString().Length).Max()).Max();
+        maxNumDigits = Math.Max(maxNumDigits, b.Select(val => val.ToString().Length).Max());
+        maxNumDigits = Math.Max(maxNumDigits, c.Select(val => val.ToString().Length).Max());
+
+        for (int j = 0; j < columns; j++)
+            Console.Write($"{c[j].ToString().PadLeft(maxNumDigits)} ");
+        Console.WriteLine();
+        Console.WriteLine(string.Concat(Enumerable.Repeat(new String('-', maxNumDigits + 1), columns)));
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < columns; j++)
             {
-                Console.Write($"{A[i, j],2} ");
+                Console.Write($"{A[i, j].ToString().PadLeft(maxNumDigits)} ");
             }
-            Console.Write($"   {b[i],2}");
+            Console.Write($" | {b[i].ToString().PadLeft(maxNumDigits)}");
             Console.WriteLine();
         }
         Console.WriteLine();
     }
-    //void printMatrix(int[,] A)
-    //{
-    //    int rows = A.GetLength(0);
-    //    int columns = A.GetLength(1);
-
-    //    for (int i = 0; i < rows; i++)
-    //    {
-    //        for (int j = 0; j < columns; j++)
-    //        {
-    //            Console.Write($"{A[i, j]} ");
-    //        }
-    //        Console.WriteLine();
-    //    }
-    //    Console.WriteLine();
-    //}
-    void printVector(int[] b)
-    {
-        int rows = b.GetLength(0);
-
-        for (int i = 0; i < rows; i++)
-        {
-            Console.WriteLine($"{b[i]} ");
-        }
-        Console.WriteLine();
-    }
+#pragma warning restore 8321
 
     void swapRow(int[,] A, int[] b, int i, int j)
     {
@@ -387,19 +124,10 @@ void P2()
 
     (int[,] A, int[] b, int[] c) reduce(int[,] A, int[] b, int[] c)
     {
-        //printMatrix(A, b);
-        //printVector(c);
-
         int Arows = A.GetLength(0);
         int Acolumns = A.GetLength(1);
-        //Console.WriteLine("===");
-        //printMatrix(A, b);
         for (int col = 0; col < Acolumns; col++)
         {
-            //Console.WriteLine("---");
-            //Console.WriteLine(col);
-            //printMatrix(A, b);
-
             // Swap columns around until there's definitely a non-0 in column col
             //Console.WriteLine($"Swapping columns to ensure there is a non-0 value in column {col}");
             int k = col + 1;
@@ -412,16 +140,12 @@ void P2()
                 rowsWithNon0 = Enumerable.Range(col, Arows - col).Where(i => A[i, col] != 0).ToList();
             }
 
-            //printMatrix(A, b);
-
             // If there's no column with non-0 values, we're done
             if (rowsWithNon0.Count == 0)
             {
                 //Console.WriteLine("No suitable column with non-0 values");
                 break;
             }
-
-            //printMatrix(A, b);
 
             // Swap rows so A[col][col] is non-0
             //Console.WriteLine($"Swap rows to put non-0 in A[{col}][{col}]");
@@ -433,20 +157,10 @@ void P2()
 
             Debug.Assert(A[col, col] != 0);
 
-            //printMatrix(A, b);
-
             // Reduce other rows
             for (int row = col + 1; row < Arows; row++)
                 reduceRow(A, b, row, col);
-
-            //printMatrix(A, b);
-            //printVector(b);
-            //printVector(c);
         }
-
-        //Console.WriteLine("===");
-
-        //printMatrix(A, b);
 
         List<int> rowsWithNotAll0 = Enumerable.Range(0, Arows).Where(row => Enumerable.Range(0, Acolumns).Select(column => A[row, column]).Any(e => e != 0)).ToList();
 
@@ -459,7 +173,6 @@ void P2()
         Arows = A.GetLength(0);
         b = rowsWithNotAll0.Select(row => b[row]).ToArray();
 
-        //Console.WriteLine("Back substitution");
         // Back substitution
         for (int row = Arows - 1; row >= 0; row--)
         {
@@ -469,45 +182,83 @@ void P2()
             }
         }
 
-        printMatrix(A, b);
-        printVector(c);
-
         return (A, b, c);
     }
+
+    List<List<int>> generateFreeVarValues(int[] c, int numFreeVars)
+    {
+        if (numFreeVars == 0)
+            return new List<List<int>>() { new List<int>() };
+
+        List<List<int>> combinations = new();
+        List<List<int>> subCombinations = generateFreeVarValues(c, numFreeVars - 1);
+        for (int val = 0; val <= c[^numFreeVars]; val++)
+            combinations.AddRange(subCombinations.Select(sc => (new List<int>() { val }).Concat(sc).ToList()));
+        return combinations;
+    }
+
+    Int64 result = 0;
 
     // Ax = b
     // A is the coefficient matrix for the linear equations
     // x is the input vector i.e. button pushes
     // b is the target joltages
     foreach (Machine machine in machines)
-{
-    int[,] A = new int[machine.TargetLights.Length, machine.Buttons.Count];
-    int[] b = machine.TargetJoltages;
-    int[] c = machine.Buttons.Select(button => button.Select(j => b[j]).Min()).ToArray();
-    for (int buttonIndex = 0; buttonIndex < machine.Buttons.Count; buttonIndex++)
     {
-        var button = machine.Buttons[buttonIndex];
-        for (int joltageIndex = 0; joltageIndex < machine.TargetJoltages.Length; joltageIndex++)
+        Int64 minSolution = Int64.MaxValue;
+
+        int[,] A = new int[machine.TargetLights.Length, machine.Buttons.Count];
+        int[] b = machine.TargetJoltages;
+        int[] c = machine.Buttons.Select(button => button.Select(j => b[j]).Min()).ToArray();
+        for (int buttonIndex = 0; buttonIndex < machine.Buttons.Count; buttonIndex++)
         {
-            if (button.Contains(joltageIndex))
+            var button = machine.Buttons[buttonIndex];
+            for (int joltageIndex = 0; joltageIndex < machine.TargetJoltages.Length; joltageIndex++)
             {
-                A[joltageIndex, buttonIndex] = 1;
+                if (button.Contains(joltageIndex))
+                {
+                    A[joltageIndex, buttonIndex] = 1;
+                }
             }
         }
+
+        (A, b, c) = reduce(A, b, c);
+
+        //printMatrix(A, b, c);
+
+        int rows = A.GetLength(0);
+        int columns = A.GetLength(1);
+        int rank = rows;
+        int numFreeVars = columns - rows;
+
+        var combinationsOfFreeVarValues = generateFreeVarValues(c, numFreeVars);
+        foreach (var combinationOfFreeVarValues in combinationsOfFreeVarValues)
+        {
+            bool valid = true;
+            int solution = combinationOfFreeVarValues.Sum();
+            for (int nonFreeVarIndex = 0; nonFreeVarIndex < rank; nonFreeVarIndex++)
+            {
+                int sumMultipliedFreeVarVals = Enumerable.Range(0, numFreeVars).Select(j => combinationOfFreeVarValues[j] * A[nonFreeVarIndex, rank + j]).Sum();
+                int remainingVal = b[nonFreeVarIndex] - sumMultipliedFreeVarVals;
+                decimal nonFreeVarVal = (decimal)remainingVal / A[nonFreeVarIndex, nonFreeVarIndex]; // Integer division
+                if (nonFreeVarVal < 0 || (nonFreeVarVal % 1) != 0)
+                {
+                    valid = false;
+                    break;
+                }
+                solution += (int)nonFreeVarVal;
+            }
+            if (valid)
+            {
+                minSolution = Math.Min(minSolution, solution);
+            }
+        }
+
+        result += minSolution;
     }
-    //printMatrix(A);
-    //printVector(b);
-    //printVector(c);
 
-    (A, b, c) = reduce(A, b, c);
-
-    //printMatrix(A);
-    //printVector(b);
-    //printVector(c);
-}
-
-Console.WriteLine(result);
-Console.ReadLine();
+    Console.WriteLine(result);
+    Console.ReadLine();
 }
 
 P1();
